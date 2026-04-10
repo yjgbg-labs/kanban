@@ -12,3 +12,4 @@ sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite"] }
 uuid = { version = "1", features = ["v4"] }
 tower-http = { version = "0.5", features = ["cors"] }
 anyhow = "1"
+
