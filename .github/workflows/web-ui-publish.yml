@@ -26,4 +26,4 @@ jobs:
             --frontend=dockerfile.v0 \
             --local context=. \
             --local dockerfile=. \
-            --output "type=image,name=reg.reg.svc/kanban-web:${{ github.ref_name }},push=true,registry.insecure=true"
+            --output "type=image,name=reg.yjgbg.lab/kanban-web:${{ github.ref_name }},push=true,registry.insecure=true"
