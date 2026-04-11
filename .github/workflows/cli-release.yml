@@ -1,0 +1,42 @@
+name: CLI Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: arc-runner-set
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: cli
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: cli/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build binaries
+        run: |
+          npx --yes @vercel/pkg . \
+            --targets node18-linux-x64,node18-macos-x64,node18-win-x64 \
+            --output dist/kanban
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            cli/dist/kanban-linux
+            cli/dist/kanban-macos
+            cli/dist/kanban-win.exe
