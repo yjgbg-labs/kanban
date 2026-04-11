@@ -9,7 +9,6 @@ FROM node:22-slim
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --legacy-peer-deps --omit=dev
-COPY --from=builder /build.tar /tmp/
-RUN tar xf /tmp/build.tar && rm /tmp/build.tar
+RUN --mount=type=bind,from=builder,source=/build.tar,target=/tmp/build.tar tar xf /tmp/build.tar
 EXPOSE 3000
 CMD ["npm", "start"]
