@@ -17,26 +17,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: cli/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build binaries
+      - name: Install Rust toolchain
         run: |
-          npx --yes @yao-pkg/pkg . \
-            --targets node22-linux-x64,node22-macos-x64,node22-win-x64 \
-            --output dist/kanban
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Build release binary
+        run: cargo build --release
+
+      - name: Prepare artifact
+        run: |
+          cp target/release/kanban target/release/kanban-linux-x86_64
+          gzip -k target/release/kanban-linux-x86_64
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            cli/dist/kanban-linux
-            cli/dist/kanban-macos
-            cli/dist/kanban-win.exe
+            cli/target/release/kanban-linux-x86_64
+            cli/target/release/kanban-linux-x86_64.gz
