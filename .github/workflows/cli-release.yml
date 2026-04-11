@@ -29,8 +29,8 @@ jobs:
 
       - name: Build binaries
         run: |
-          npx --yes @vercel/pkg . \
-            --targets node18-linux-x64,node18-macos-x64,node18-win-x64 \
+          npx --yes @yao-pkg/pkg . \
+            --targets node22-linux-x64,node22-macos-x64,node22-win-x64 \
             --output dist/kanban
 
       - name: Create GitHub Release
