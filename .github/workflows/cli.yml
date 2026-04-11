@@ -22,6 +22,7 @@ jobs:
 
       - name: Install Rust toolchain
         run: |
+          sudo apt-get update && sudo apt-get install -y build-essential
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 

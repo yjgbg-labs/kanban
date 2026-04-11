@@ -14,12 +14,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install buildctl
+      - name: Install dependencies
         run: |
+          sudo apt-get update && sudo apt-get install -y build-essential
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
           curl -sSL "https://github.com/moby/buildkit/releases/download/v0.21.1/buildkit-v0.21.1.linux-amd64.tar.gz" \
             | sudo tar -xz -C /usr/local
 
-      - name: Build and push
+      - name: Build binary
+        working-directory: server
+        run: cargo build --release
+
+      - name: Build and push image
         working-directory: server
         run: |
           buildctl --addr tcp://buildkitd.arc-runners:1234 build \
